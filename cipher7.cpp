@@ -1,72 +1,76 @@
 #include <iostream>
-#include <cmath>
 using namespace std;
 
-// Abstract base class
-class Shape {
+// Base class: Account
+class Account {
 public:
-    virtual float area() = 0; // Pure virtual function
-    virtual ~Shape() {}       // Virtual destructor
+    virtual void displayBalance() {
+        cout << "Account balance: Not specified" << endl;
+    }
+    virtual ~Account() {}
 };
 
-// Derived class: Circle
-class Circle : public Shape {
-    float radius;
+// Derived class: SavingAccount
+class SavingAccount : public Account {
 public:
-    Circle(float r) : radius(r) {}
-    float area() override {
-        return M_PI * radius * radius;
-    }
-    ~Circle() {
-        cout << "Circle destructor called" << endl;
+    void displayBalance() override {
+        cout << "Saving Account balance: $5000" << endl;
     }
 };
 
-// Derived class: Square
-class Square : public Shape {
-    float side;
+// Derived class: CurrentAccount
+class CurrentAccount : public Account {
 public:
-    Square(float s) : side(s) {}
-    float area() override {
-        return side * side;
-    }
-    ~Square() {
-        cout << "Square destructor called" << endl;
+    void displayBalance() override {
+        cout << "Current Account balance: $10000" << endl;
     }
 };
 
-// Base class with virtual destructor
-class Base {
+// General class hierarchy
+class Animal {
 public:
-    virtual ~Base() {
-        cout << "Base destructor called" << endl;
+    virtual void speak() {
+        cout << "Animal speaks" << endl;
+    }
+    virtual ~Animal() {}
+};
+
+class Dog : public Animal {
+public:
+    void speak() override {
+        cout << "Dog barks" << endl;
     }
 };
 
-// Derived class with destructor
-class Derived : public Base {
+class Cat : public Animal {
 public:
-    ~Derived() {
-        cout << "Derived destructor called" << endl;
+    void speak() override {
+        cout << "Cat meows" << endl;
     }
 };
 
 int main() {
-    // Part 1: Polymorphism
-    Shape* s1 = new Circle(3.0);
-    Shape* s2 = new Square(4.0);
+    // Part 1: Account hierarchy and virtual displayBalance
+    Account* acc1 = new SavingAccount();
+    Account* acc2 = new CurrentAccount();
 
-    cout << "Circle area: " << s1->area() << endl;
-    cout << "Square area: " << s2->area() << endl;
+    acc1->displayBalance(); // Calls SavingAccount::displayBalance
+    acc2->displayBalance(); // Calls CurrentAccount::displayBalance
 
-    delete s1; // Calls Circle and Shape destructors
-    delete s2; // Calls Square and Shape destructors
+    delete acc1;
+    delete acc2;
 
-    cout << "----------------------" << endl;
+    cout << "------------------------" << endl;
 
-    // Part 2: Virtual destructor demo
-    Base* b = new Derived();
-    delete b; // Properly calls Derived then Base destructor
+    // Part 2: Animal hierarchy demonstrating dynamic dispatch
+    Animal* a1 = new Dog();
+    Animal* a2 = new Cat();
+
+    a1->speak(); // Calls Dog::speak
+    a2->speak(); // Calls Cat::speak
+
+    delete a1;
+    delete a2;
 
     return 0;
 }
